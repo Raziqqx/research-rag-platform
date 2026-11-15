@@ -2,13 +2,18 @@
 
 from __future__ import annotations
 
+import contextlib
 import re
-from collections.abc import Iterable
+import threading
+from collections.abc import Iterable, Iterator
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Protocol
 
 import numpy as np
 import psycopg
 from pgvector.psycopg import register_vector
+from psycopg_pool import ConnectionPool
 
 from rag.config import REPO_ROOT
 
@@ -20,6 +25,57 @@ def connect(url: str) -> psycopg.Connection:
     conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
     register_vector(conn)
     return conn
+
+
+class ConnectionSource(Protocol):
+    """Anything that lends out a connection: psycopg_pool.ConnectionPool or SingleConnection."""
+
+    def connection(self) -> contextlib.AbstractContextManager[psycopg.Connection]: ...
+
+
+class SingleConnection:
+    """One connection behind the pool interface, for scripts and tests.
+
+    Borrowers are serialised by a re-entrant lock (a psycopg connection must not run two
+    queries at once). The service uses a real pool instead; see make_pool.
+    """
+
+    def __init__(self, conn: psycopg.Connection):
+        self.conn = conn
+        self._lock = threading.RLock()
+
+    @contextmanager
+    def connection(self) -> Iterator[psycopg.Connection]:
+        with self._lock:
+            yield self.conn
+
+
+def as_source(conn_or_pool: psycopg.Connection | ConnectionSource) -> ConnectionSource:
+    if isinstance(conn_or_pool, psycopg.Connection):
+        return SingleConnection(conn_or_pool)
+    return conn_or_pool
+
+
+def _configure(conn: psycopg.Connection) -> None:
+    conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
+    register_vector(conn)
+
+
+def make_pool(url: str, min_size: int = 1, max_size: int = 8) -> ConnectionPool:
+    """Pool of autocommit connections with the pgvector type registered on each.
+
+    Each request borrows a connection only for the duration of its queries, so /health never
+    waits behind a slow /ask (the reranker runs with no connection held).
+    """
+    return ConnectionPool(
+        url,
+        min_size=min_size,
+        max_size=max_size,
+        kwargs={"autocommit": True},
+        configure=_configure,
+        open=True,
+        name="rag",
+    )
 
 
 def migrate(conn: psycopg.Connection, migrations_dir: Path = MIGRATIONS_DIR) -> list[str]:

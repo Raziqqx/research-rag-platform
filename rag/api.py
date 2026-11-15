@@ -42,9 +42,9 @@ def build_platform_from_env() -> Platform:
     from rag.retrieval import Retriever
 
     s = get_settings()
-    conn = db.connect(s.database_url)
-    retriever = Retriever(conn, s.strategy, Embedder(s.embedding_model), s.reranker_model)
-    return Platform(conn, retriever, get_provider(), s.abstain_threshold)
+    pool = db.make_pool(s.database_url, max_size=s.db_pool_size)
+    retriever = Retriever(pool, s.strategy, Embedder(s.embedding_model), s.reranker_model)
+    return Platform(pool, retriever, get_provider(), s.abstain_threshold)
 
 
 def create_app(
@@ -54,6 +54,8 @@ def create_app(
     async def lifespan(app: FastAPI):
         app.state.platform = platform or factory()
         yield
+        if platform is None and hasattr(app.state.platform.db, "close"):
+            app.state.platform.db.close()  # the pool we created
 
     app = FastAPI(
         title="Research RAG Platform",

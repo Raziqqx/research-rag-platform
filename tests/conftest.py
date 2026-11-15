@@ -87,12 +87,17 @@ _db_counter = itertools.count()
 
 
 @pytest.fixture(scope="module")
-def conn(pg_container):
-    """A connection to a brand-new, empty database (one per test module)."""
+def db_url(pg_container):
+    """URL of a brand-new, empty database (one per test module)."""
     admin_url = pg_container.get_connection_url()
     name = f"t{next(_db_counter)}"
     with db.connect(admin_url) as admin:
         admin.execute(f"CREATE DATABASE {name}")
-    c = db.connect(admin_url.rsplit("/", 1)[0] + f"/{name}")
+    return admin_url.rsplit("/", 1)[0] + f"/{name}"
+
+
+@pytest.fixture(scope="module")
+def conn(db_url):
+    c = db.connect(db_url)
     yield c
     c.close()

@@ -96,7 +96,7 @@ def test_health_reports_db_failure(platform):
         def health(self):
             raise RuntimeError("connection refused")
 
-    broken = Broken(platform.conn, platform.retriever, platform.provider)
+    broken = Broken(platform.db, platform.retriever, platform.provider)
     with TestClient(create_app(broken)) as c:
         r = c.get("/health")
     assert r.status_code == 503 and r.json()["status"] == "degraded"

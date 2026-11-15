@@ -35,6 +35,7 @@ class Settings:
             "RAG_RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"
         )
     )
+    db_pool_size: int = field(default_factory=lambda: int(os.environ.get("RAG_DB_POOL_SIZE", "8")))
     strategy: str = field(default_factory=lambda: os.environ.get("RAG_STRATEGY", "recursive"))
     # Below this top cross-encoder score /ask abstains. Calibrated in results/abstention.md.
     abstain_threshold: float = field(

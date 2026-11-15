@@ -107,9 +107,17 @@ Decisions taken without asking, with the reasoning. Newest at the bottom of each
 
 ## Service (run B)
 - **One `Platform` facade (`rag/service.py`)** serves both FastAPI and MCP, so they can't drift.
-- **One psycopg connection behind a lock**: requests are serialised. The cross-encoder is
-  CPU-bound (~1.3 s/query), so parallel requests wouldn't finish sooner on this machine; a
-  connection pool plus a model worker is the scale-out path (run C / failure analysis).
+- ~~One psycopg connection behind a lock~~ (run B) **replaced in run C by a `psycopg_pool`
+  ConnectionPool** (`rag/db.py:make_pool`, size `RAG_DB_POOL_SIZE`, default 8). Every
+  operation borrows a connection only around its SQL and returns it before model inference,
+  so a 1.3 s reranker call no longer holds anything /health needs. Scripts and tests that pass
+  a bare connection get it wrapped in `SingleConnection` (re-entrant lock, same
+  `.connection()` interface). The lazy BM25 build is guarded by its own lock so concurrent
+  first requests build it once. `tests/test_concurrency.py` checks, with a reranker that
+  sleeps 0.8 s, that /health returns in < 0.4 s while /ask is mid-rerank and that two
+  /search calls overlap (wall < 1.2 s rather than >= 1.6 s). Concurrent requests still share
+  the CPU, so throughput on one machine is bounded by the cross-encoder; scaling out means
+  more API replicas or a separate model server.
 - **Timing logs**: an HTTP middleware logs `METHOD path -> status in X ms` and sets
   `X-Response-Time-Ms`. `/health` returns 503 `degraded` if the DB query fails, and
   `degraded` if the collection has no chunks.

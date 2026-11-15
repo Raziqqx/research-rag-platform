@@ -9,6 +9,7 @@ hybrid_rerank  hybrid candidates re-scored by a cross-encoder
 from __future__ import annotations
 
 import re
+import threading
 from collections.abc import Callable, Hashable, Sequence
 from dataclasses import dataclass
 
@@ -16,6 +17,7 @@ import numpy as np
 import psycopg
 from rank_bm25 import BM25Okapi
 
+from rag.db import ConnectionSource, as_source
 from rag.embed import Embedder, cross_encoder_scores
 
 MODES = ("dense", "bm25", "hybrid", "hybrid_rerank")
@@ -72,13 +74,15 @@ _COLS = "id, doc_id, page_start, page_end, char_start, char_end, text"
 class Retriever:
     def __init__(
         self,
-        conn: psycopg.Connection,
+        conn: psycopg.Connection | ConnectionSource,
         strategy: str,
         embedder: Embedder,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
         rerank_fn: RerankFn | None = None,
     ):
-        self.conn = conn
+        # A pool (service) or a single connection (scripts/tests). Connections are borrowed only
+        # around queries, never across model inference.
+        self.db = as_source(conn)
         self.strategy = strategy
         self.embedder = embedder
         self.reranker_model = reranker_model
@@ -88,14 +92,15 @@ class Retriever:
         )
         self._bm25: BM25Okapi | None = None
         self._rows: list[tuple] = []
+        self._bm25_lock = threading.Lock()  # build the in-memory index once, even under load
 
     # ---- dense
     def dense(self, query: str, k: int) -> list[Hit]:
         qv = self.embedder([query])[0]
-        with self.conn.transaction():
+        with self.db.connection() as conn, conn.transaction():
             # ef_search must be >= k or HNSW returns fewer than k rows.
-            self.conn.execute(f"SET LOCAL hnsw.ef_search = {max(64, 2 * k)}")
-            rows = self.conn.execute(
+            conn.execute(f"SET LOCAL hnsw.ef_search = {max(64, 2 * k)}")
+            rows = conn.execute(
                 f"""SELECT {_COLS}, 1 - (embedding <=> %s) AS sim FROM chunks
                     WHERE strategy = %s AND embedding_model = %s
                     ORDER BY embedding <=> %s LIMIT %s""",
@@ -105,15 +110,19 @@ class Retriever:
 
     # ---- bm25
     def _ensure_bm25(self) -> BM25Okapi:
-        if self._bm25 is None:
-            self._rows = self.conn.execute(
-                f"SELECT {_COLS} FROM chunks WHERE strategy=%s AND embedding_model=%s ORDER BY id",
-                (self.strategy, self.embedder.model_name),
-            ).fetchall()
-            if not self._rows:
-                raise LookupError(f"no chunks for strategy {self.strategy!r}")
-            self._bm25 = BM25Okapi([tokenize(r[6]) for r in self._rows])
-        return self._bm25
+        with self._bm25_lock:
+            if self._bm25 is None:
+                with self.db.connection() as conn:
+                    rows = conn.execute(
+                        f"SELECT {_COLS} FROM chunks WHERE strategy=%s AND embedding_model=%s "
+                        "ORDER BY id",
+                        (self.strategy, self.embedder.model_name),
+                    ).fetchall()
+                if not rows:
+                    raise LookupError(f"no chunks for strategy {self.strategy!r}")
+                self._rows = rows
+                self._bm25 = BM25Okapi([tokenize(r[6]) for r in rows])
+            return self._bm25
 
     def bm25(self, query: str, k: int) -> list[Hit]:
         scores = self._ensure_bm25().get_scores(tokenize(query))
