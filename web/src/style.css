@@ -1,0 +1,12 @@
+:root { font-family: system-ui, sans-serif; color: #1d1d1f; background: #fafafa; }
+main { max-width: 900px; margin: 0 auto; padding: 16px; }
+form { display: flex; gap: 8px; flex-wrap: wrap; }
+input { flex: 1 1 300px; padding: 8px; font-size: 1rem; }
+select, button { padding: 8px; }
+.panel { background: #fff; border: 1px solid #ddd; border-radius: 6px; padding: 12px 16px; margin-top: 16px; }
+.cite { border: none; background: #e8f0fe; color: #1a56db; cursor: pointer; padding: 0 3px; margin: 0 2px; border-radius: 3px; font-size: 0.85em; }
+.abstained { color: #777; font-style: italic; }
+.warn { color: #a15c00; }
+blockquote { border-left: 3px solid #1a56db; margin: 12px 0 0; padding: 4px 12px; background: #f5f8ff; }
+pre { white-space: pre-wrap; font-family: inherit; }
+li p { margin: 4px 0 12px; }
