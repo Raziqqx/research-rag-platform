@@ -186,6 +186,12 @@ Decisions taken without asking, with the reasoning. Newest at the bottom of each
   long-running service has a healthcheck; web waits for a healthy API, the API for a healthy
   DB. The Postgres password and host port are env-configurable (`POSTGRES_PASSWORD`,
   `DB_PORT`), defaulting to the local-dev values.
+- **Verified (2026-11-16):** `docker compose up -d --build --wait` -> db, api, web all
+  `healthy`. A `/health` sent 0.3 s into a 2.5 s `/ask` returned in 0.06 s (the pool fix, end
+  to end). `docker compose --profile ingest run --rm ingest python scripts/fetch_corpus.py`
+  -> "22/22 PDFs verified"; the eval profile loads all 58 questions in the container. The
+  full ingest/eval jobs were not re-run in containers (same scripts as the host run that
+  produced results/). Containers stopped afterwards (db left running as found).
 - **`make reproduce`** regenerates every file in `results/` on the host venv: db -> corpus ->
   ingest (3 chunkers) -> ingest-bge -> eval-retrieval -> calibrate -> eval (ablation +
   answers). `make eval` is the run C eval only.

@@ -8,6 +8,7 @@ COPY pyproject.toml ./
 COPY rag ./rag
 COPY migrations ./migrations
 COPY corpus ./corpus
+COPY scripts ./scripts
 RUN pip install .
 EXPOSE 8000
 HEALTHCHECK --interval=10s --timeout=5s --start-period=60s --retries=5 \

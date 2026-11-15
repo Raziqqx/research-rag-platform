@@ -1,39 +1,101 @@
-# db + api + web. Run C extends this (MCP over HTTP, eval job). Usage:
-#   docker compose up -d --build --wait     then  http://localhost:8080 (web), :8000/docs (API)
+# db + api + web, plus one-off jobs behind profiles. Usage:
+#   docker compose up -d --build --wait                 web :8080, API :8000 (/docs)
+#   docker compose --profile ingest run --rm ingest     fetch PDFs (sha256-checked) + ingest
+#   docker compose --profile eval run --rm eval         regenerate results/ (needs ingest)
+# Large data stays outside the repo under ${RAG_DATA_DIR:-~/rag-data} (pdfs/, hf-cache/).
+x-app-env: &app-env
+  DATABASE_URL: postgresql://rag:${POSTGRES_PASSWORD:-rag}@db:5432/rag
+  RAG_STRATEGY: ${RAG_STRATEGY:-recursive}
+  RAG_ABSTAIN_THRESHOLD: ${RAG_ABSTAIN_THRESHOLD:--1.31}
+  RAG_DB_POOL_SIZE: ${RAG_DB_POOL_SIZE:-8}
+  RAG_DATA_DIR: /data
+
+x-app-volumes: &app-volumes
+  - ${RAG_DATA_DIR:-~/rag-data}/hf-cache:/hf-cache
+  - ${RAG_DATA_DIR:-~/rag-data}/pdfs:/data/pdfs
+
 services:
   db:
     image: pgvector/pgvector:pg16
     environment:
       POSTGRES_USER: rag
-      POSTGRES_PASSWORD: rag
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rag}
       POSTGRES_DB: rag
-    ports: ["5433:5432"]
+    ports: ["${DB_PORT:-5433}:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rag -d rag"]
       interval: 5s
       retries: 20
+    restart: unless-stopped
 
   api:
     build: { context: ., dockerfile: docker/api.Dockerfile }
+    image: research-rag-api
     depends_on:
       db: { condition: service_healthy }
     environment:
-      DATABASE_URL: postgresql://rag:rag@db:5432/rag
-      RAG_STRATEGY: ${RAG_STRATEGY:-recursive}
-      RAG_ABSTAIN_THRESHOLD: ${RAG_ABSTAIN_THRESHOLD:--1.31}
-      HF_HUB_OFFLINE: "1"
+      <<: *app-env
+      HF_HUB_OFFLINE: "1" # models come from the mounted cache; never download at serve time
       # Empty -> extractive mock provider; set it in your shell to use Claude.
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
-    volumes:
-      - ${RAG_DATA_DIR:-~/rag-data}/hf-cache:/hf-cache
+    volumes: *app-volumes
     ports: ["8000:8000"]
+    healthcheck:
+      # /health is 200 only when the DB answers and the collection has chunks.
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(urllib.request.urlopen('http://localhost:8000/health').status != 200)"]
+      interval: 10s
+      timeout: 5s
+      start_period: 60s
+      retries: 5
+    restart: unless-stopped
 
   web:
     build: ./web
     depends_on:
       api: { condition: service_healthy }
-    ports: ["8080:80"]
+    ports: ["${WEB_PORT:-8080}:80"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  # One-off: download the corpus (verifies each sha256) and build every collection.
+  ingest:
+    profiles: [ingest]
+    image: research-rag-api
+    build: { context: ., dockerfile: docker/api.Dockerfile }
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      <<: *app-env
+      HF_HUB_OFFLINE: "0" # first run downloads the models into the mounted cache
+    volumes: *app-volumes
+    command: >
+      sh -c "python scripts/fetch_corpus.py &&
+             python -m rag.ingest &&
+             python -m rag.ingest --strategies recursive --model BAAI/bge-small-en-v1.5"
+
+  # One-off: regenerate results/ inside the container (same scripts as `make eval`).
+  eval:
+    profiles: [eval]
+    image: research-rag-api
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      <<: *app-env
+      HF_HUB_OFFLINE: "1"
+    volumes:
+      - ${RAG_DATA_DIR:-~/rag-data}/hf-cache:/hf-cache
+      - ./eval:/app/eval:ro
+      - ./results:/app/results
+    command: >
+      sh -c "python scripts/eval_retrieval.py --strategy recursive &&
+             python scripts/calibrate_abstain.py &&
+             python scripts/eval_ablation.py &&
+             python scripts/eval_answers.py"
 
 volumes:
   pgdata:
