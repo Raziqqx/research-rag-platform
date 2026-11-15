@@ -1,0 +1,295 @@
+{
+ "threshold": -1.31,
+ "rows": [
+  {
+   "id": "q01",
+   "answerable": true,
+   "top_score": 7.4507
+  },
+  {
+   "id": "q02",
+   "answerable": true,
+   "top_score": 6.2499
+  },
+  {
+   "id": "q03",
+   "answerable": true,
+   "top_score": 4.9846
+  },
+  {
+   "id": "q04",
+   "answerable": true,
+   "top_score": 3.934
+  },
+  {
+   "id": "q05",
+   "answerable": true,
+   "top_score": 6.9142
+  },
+  {
+   "id": "q06",
+   "answerable": true,
+   "top_score": 4.5599
+  },
+  {
+   "id": "q07",
+   "answerable": true,
+   "top_score": 2.7054
+  },
+  {
+   "id": "q08",
+   "answerable": true,
+   "top_score": 3.3274
+  },
+  {
+   "id": "q09",
+   "answerable": true,
+   "top_score": 6.897
+  },
+  {
+   "id": "q10",
+   "answerable": true,
+   "top_score": 2.7047
+  },
+  {
+   "id": "q11",
+   "answerable": true,
+   "top_score": 4.5061
+  },
+  {
+   "id": "q12",
+   "answerable": true,
+   "top_score": 4.9654
+  },
+  {
+   "id": "q13",
+   "answerable": true,
+   "top_score": 4.6243
+  },
+  {
+   "id": "q14",
+   "answerable": true,
+   "top_score": 3.7142
+  },
+  {
+   "id": "q15",
+   "answerable": true,
+   "top_score": 7.3987
+  },
+  {
+   "id": "q16",
+   "answerable": true,
+   "top_score": 3.6542
+  },
+  {
+   "id": "q17",
+   "answerable": true,
+   "top_score": 8.2172
+  },
+  {
+   "id": "q18",
+   "answerable": true,
+   "top_score": 2.072
+  },
+  {
+   "id": "q19",
+   "answerable": true,
+   "top_score": 5.6385
+  },
+  {
+   "id": "q20",
+   "answerable": true,
+   "top_score": 2.2092
+  },
+  {
+   "id": "q21",
+   "answerable": true,
+   "top_score": 7.5385
+  },
+  {
+   "id": "q22",
+   "answerable": true,
+   "top_score": 6.0329
+  },
+  {
+   "id": "q23",
+   "answerable": true,
+   "top_score": 7.9973
+  },
+  {
+   "id": "q24",
+   "answerable": true,
+   "top_score": 4.733
+  },
+  {
+   "id": "q25",
+   "answerable": true,
+   "top_score": 4.7852
+  },
+  {
+   "id": "q26",
+   "answerable": true,
+   "top_score": 1.629
+  },
+  {
+   "id": "q27",
+   "answerable": true,
+   "top_score": 5.3464
+  },
+  {
+   "id": "q28",
+   "answerable": true,
+   "top_score": 4.3103
+  },
+  {
+   "id": "q29",
+   "answerable": true,
+   "top_score": 5.1634
+  },
+  {
+   "id": "q30",
+   "answerable": true,
+   "top_score": 4.0381
+  },
+  {
+   "id": "q31",
+   "answerable": true,
+   "top_score": 9.0495
+  },
+  {
+   "id": "q32",
+   "answerable": true,
+   "top_score": 4.3577
+  },
+  {
+   "id": "q33",
+   "answerable": true,
+   "top_score": 4.8285
+  },
+  {
+   "id": "q34",
+   "answerable": true,
+   "top_score": 6.3454
+  },
+  {
+   "id": "q35",
+   "answerable": true,
+   "top_score": 5.3089
+  },
+  {
+   "id": "q36",
+   "answerable": true,
+   "top_score": 1.3225
+  },
+  {
+   "id": "q37",
+   "answerable": true,
+   "top_score": -0.7038
+  },
+  {
+   "id": "q38",
+   "answerable": true,
+   "top_score": 1.5424
+  },
+  {
+   "id": "q39",
+   "answerable": true,
+   "top_score": 6.272
+  },
+  {
+   "id": "q40",
+   "answerable": true,
+   "top_score": 1.2317
+  },
+  {
+   "id": "q41",
+   "answerable": true,
+   "top_score": 8.7189
+  },
+  {
+   "id": "q42",
+   "answerable": true,
+   "top_score": 5.6207
+  },
+  {
+   "id": "q43",
+   "answerable": true,
+   "top_score": 5.2165
+  },
+  {
+   "id": "q44",
+   "answerable": true,
+   "top_score": 5.8319
+  },
+  {
+   "id": "q45",
+   "answerable": true,
+   "top_score": 4.3818
+  },
+  {
+   "id": "q46",
+   "answerable": true,
+   "top_score": 5.1332
+  },
+  {
+   "id": "q47",
+   "answerable": true,
+   "top_score": 2.5142
+  },
+  {
+   "id": "q48",
+   "answerable": true,
+   "top_score": 7.4711
+  },
+  {
+   "id": "q49",
+   "answerable": true,
+   "top_score": 2.7603
+  },
+  {
+   "id": "q50",
+   "answerable": true,
+   "top_score": 4.593
+  },
+  {
+   "id": "q51",
+   "answerable": true,
+   "top_score": 7.2327
+  },
+  {
+   "id": "q52",
+   "answerable": false,
+   "top_score": -3.8749
+  },
+  {
+   "id": "q53",
+   "answerable": false,
+   "top_score": -1.909
+  },
+  {
+   "id": "q54",
+   "answerable": false,
+   "top_score": -9.5676
+  },
+  {
+   "id": "q55",
+   "answerable": false,
+   "top_score": -4.4312
+  },
+  {
+   "id": "q56",
+   "answerable": false,
+   "top_score": -5.252
+  },
+  {
+   "id": "q57",
+   "answerable": false,
+   "top_score": -4.3827
+  },
+  {
+   "id": "q58",
+   "answerable": false,
+   "top_score": -4.3526
+  }
+ ]
+}

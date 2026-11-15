@@ -35,6 +35,11 @@ class Settings:
             "RAG_RERANKER_MODEL", "cross-encoder/ms-marco-MiniLM-L-6-v2"
         )
     )
+    strategy: str = field(default_factory=lambda: os.environ.get("RAG_STRATEGY", "recursive"))
+    # Below this top cross-encoder score /ask abstains. Calibrated in results/abstention.md.
+    abstain_threshold: float = field(
+        default_factory=lambda: float(os.environ.get("RAG_ABSTAIN_THRESHOLD", "-1.31"))
+    )
 
     @property
     def pdf_dir(self) -> Path:

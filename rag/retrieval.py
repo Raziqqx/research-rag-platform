@@ -9,7 +9,7 @@ hybrid_rerank  hybrid candidates re-scored by a cross-encoder
 from __future__ import annotations
 
 import re
-from collections.abc import Hashable, Sequence
+from collections.abc import Callable, Hashable, Sequence
 from dataclasses import dataclass
 
 import numpy as np
@@ -64,6 +64,8 @@ class Hit:
     score: float
 
 
+RerankFn = Callable[[str, list[str]], Sequence[float]]
+
 _COLS = "id, doc_id, page_start, page_end, char_start, char_end, text"
 
 
@@ -74,11 +76,16 @@ class Retriever:
         strategy: str,
         embedder: Embedder,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
+        rerank_fn: RerankFn | None = None,
     ):
         self.conn = conn
         self.strategy = strategy
         self.embedder = embedder
         self.reranker_model = reranker_model
+        # (query, passages) -> scores. Injectable so API/MCP tests run without the model.
+        self.rerank_fn: RerankFn = rerank_fn or (
+            lambda q, ps: cross_encoder_scores(reranker_model, q, ps)
+        )
         self._bm25: BM25Okapi | None = None
         self._rows: list[tuple] = []
 
@@ -122,7 +129,7 @@ class Retriever:
 
     def hybrid_rerank(self, query: str, k: int) -> list[Hit]:
         cands = self.hybrid(query, CANDIDATES)
-        scores = cross_encoder_scores(self.reranker_model, query, [h.text for h in cands])
+        scores = np.asarray(self.rerank_fn(query, [h.text for h in cands]))
         order = np.argsort(-scores, kind="stable")[:k]
         return [_rescore(cands[i], float(scores[i])) for i in order]
 
