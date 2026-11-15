@@ -5,6 +5,7 @@ Fake models keep the integration tests to Docker only: no model download.
 """
 
 import itertools
+import os
 import zlib
 
 import numpy as np
@@ -78,6 +79,8 @@ def pg_container():
         container = tc_pg.PostgresContainer("pgvector/pgvector:pg16", driver=None)
         container.start()
     except Exception as exc:  # Docker not available
+        if os.environ.get("RAG_REQUIRE_DOCKER"):  # CI: a silent skip would hide the suite
+            raise
         pytest.skip(f"Docker unavailable: {exc}")
     yield container
     container.stop()

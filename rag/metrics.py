@@ -12,6 +12,8 @@ import re
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from rag.retrieval import tokenize
+
 _WS = re.compile(r"\s+")
 
 
@@ -81,3 +83,54 @@ def reciprocal_rank(matches: Sequence[set[int]], k: int | None = None) -> float:
 
 def mean(xs: Sequence[float]) -> float:
     return sum(xs) / len(xs) if xs else float("nan")
+
+
+# --------------------------------------------------------------------------- answer quality
+
+
+def support(sentence: str, passage: str) -> float:
+    """Lexical support of a sentence by a passage: the fraction of the sentence's content
+    tokens (rag.retrieval.tokenize: lower-cased, stopwords removed) that occur in the passage.
+
+    Cheap and deterministic on CPU. It catches citing the wrong passage and invented numbers
+    or names, but not paraphrased contradictions ("rose" vs "fell" both overlap), which an
+    NLI model would; see DECISIONS.md.
+    """
+    toks = tokenize(sentence)
+    if not toks:
+        return 1.0  # nothing to support (e.g. a lone citation marker)
+    have = set(tokenize(passage))
+    return sum(t in have for t in toks) / len(toks)
+
+
+def best_threshold(pos: Sequence[float], neg: Sequence[float]) -> tuple[float, float]:
+    """Threshold t (answer when score >= t) maximising balanced accuracy, with candidates at
+    midpoints of adjacent observed scores. Returns (t, balanced accuracy)."""
+    xs = sorted(set(pos) | set(neg))
+    cands = [xs[0] - 1.0] + [(a + b) / 2 for a, b in zip(xs, xs[1:], strict=False)] + [xs[-1] + 1]
+    best = (cands[0], -1.0)
+    for t in cands:
+        bacc = (sum(p >= t for p in pos) / len(pos) + sum(n < t for n in neg) / len(neg)) / 2
+        if bacc > best[1]:
+            best = (t, bacc)
+    return best
+
+
+def loo_abstain(scores: Sequence[float], answerable: Sequence[bool]) -> list[tuple[float, bool]]:
+    """Leave-one-out abstention: for each question, pick the threshold on all *other*
+    questions and decide this one with it. Returns (threshold used, abstained?) per question,
+    so no question is judged by a threshold fitted on itself."""
+    out = []
+    for i, s in enumerate(scores):
+        pos = [x for j, x in enumerate(scores) if j != i and answerable[j]]
+        neg = [x for j, x in enumerate(scores) if j != i and not answerable[j]]
+        t, _ = best_threshold(pos, neg)
+        out.append((t, s < t))
+    return out
+
+
+def precision_recall(predicted: Sequence[bool], actual: Sequence[bool]) -> tuple[float, float]:
+    """Precision and recall of the positive class (here: "abstain")."""
+    tp = sum(p and a for p, a in zip(predicted, actual, strict=True))
+    n_pred, n_act = sum(predicted), sum(actual)
+    return (tp / n_pred if n_pred else float("nan"), tp / n_act if n_act else float("nan"))

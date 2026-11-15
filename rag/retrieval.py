@@ -37,8 +37,15 @@ def tokenize(text: str) -> list[str]:
     return [t for t in _TOKEN.findall(text.lower()) if t not in STOPWORDS]
 
 
-def rrf(rankings: Sequence[Sequence[Hashable]], k: int = RRF_K) -> list[tuple[Hashable, float]]:
-    """Reciprocal Rank Fusion: score(d) = sum over lists of 1 / (k + rank_d), rank from 1.
+def rrf(
+    rankings: Sequence[Sequence[Hashable]],
+    k: int = RRF_K,
+    weights: Sequence[float] | None = None,
+) -> list[tuple[Hashable, float]]:
+    """Reciprocal Rank Fusion: score(d) = sum over lists of w_i / (k + rank_d), rank from 1.
+
+    `weights` (default all 1.0) is weighted RRF: w_i scales list i's contribution, e.g. to
+    trust a strong BM25 list more than a weak dense one.
 
     Ties are broken by the best single-list rank, then by first appearance, so output is
     deterministic.
@@ -46,9 +53,12 @@ def rrf(rankings: Sequence[Sequence[Hashable]], k: int = RRF_K) -> list[tuple[Ha
     score: dict[Hashable, float] = {}
     best: dict[Hashable, int] = {}
     order: dict[Hashable, int] = {}
-    for ranking in rankings:
+    weights = weights or [1.0] * len(rankings)
+    if len(weights) != len(rankings):
+        raise ValueError("need one weight per ranking")
+    for ranking, w in zip(rankings, weights, strict=True):
         for rank, item in enumerate(ranking, start=1):
-            score[item] = score.get(item, 0.0) + 1.0 / (k + rank)
+            score[item] = score.get(item, 0.0) + w / (k + rank)
             best[item] = min(best.get(item, rank), rank)
             order.setdefault(item, len(order))
     return sorted(score.items(), key=lambda kv: (-kv[1], best[kv[0]], order[kv[0]]))
@@ -79,6 +89,7 @@ class Retriever:
         embedder: Embedder,
         reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2",
         rerank_fn: RerankFn | None = None,
+        rrf_weights: tuple[float, float] = (1.0, 1.0),
     ):
         # A pool (service) or a single connection (scripts/tests). Connections are borrowed only
         # around queries, never across model inference.
@@ -90,6 +101,7 @@ class Retriever:
         self.rerank_fn: RerankFn = rerank_fn or (
             lambda q, ps: cross_encoder_scores(reranker_model, q, ps)
         )
+        self.rrf_weights = rrf_weights  # (dense, bm25) for hybrid fusion
         self._bm25: BM25Okapi | None = None
         self._rows: list[tuple] = []
         self._bm25_lock = threading.Lock()  # build the in-memory index once, even under load
@@ -133,7 +145,7 @@ class Retriever:
     def hybrid(self, query: str, k: int) -> list[Hit]:
         lists = [self.dense(query, CANDIDATES), self.bm25(query, CANDIDATES)]
         by_id = {h.chunk_id: h for hits in lists for h in hits}
-        fused = rrf([[h.chunk_id for h in hits] for hits in lists])
+        fused = rrf([[h.chunk_id for h in hits] for hits in lists], weights=self.rrf_weights)
         return [_rescore(by_id[cid], s) for cid, s in fused[:k]]
 
     def hybrid_rerank(self, query: str, k: int) -> list[Hit]:

@@ -56,3 +56,22 @@ def load_questions(get_doc: Callable[[str], Document], path: Path = EVAL_PATH) -
     if errors:
         raise ValueError("invalid eval set:\n  " + "\n  ".join(errors))
     return out
+
+
+def doc_loader(conn) -> Callable[[str], Document]:
+    """Cached doc_id -> Document rebuilt from stored pages, so offsets match ingest exactly."""
+    from functools import cache
+
+    @cache
+    def get_doc(doc_id: str) -> Document:
+        pages = [
+            r[0]
+            for r in conn.execute(
+                "SELECT text FROM pages WHERE doc_id=%s ORDER BY page_no", (doc_id,)
+            )
+        ]
+        if not pages:
+            raise LookupError(f"document {doc_id} is not ingested")
+        return Document(doc_id, pages)
+
+    return get_doc

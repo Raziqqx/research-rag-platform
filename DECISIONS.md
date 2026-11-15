@@ -177,3 +177,67 @@ Decisions taken without asking, with the reasoning. Newest at the bottom of each
   account or credentials were used, so the boot script is untested on a real VM.
 - WSL note: `docker pull` failed through the Docker Desktop credential helper; pulling with
   an empty `DOCKER_CONFIG` works for public images.
+
+## Compose, reproduce and CI (run C)
+- **Compose profiles for one-off jobs**: `ingest` (fetch PDFs with sha256 check, ingest the
+  three chunkers on MiniLM plus recursive on bge-small; the only service allowed to download
+  models) and `eval` (runs the eval scripts with `eval/` and `results/` mounted). They reuse
+  the API image (`research-rag-api`), so the job and the server run the same code. Every
+  long-running service has a healthcheck; web waits for a healthy API, the API for a healthy
+  DB. The Postgres password and host port are env-configurable (`POSTGRES_PASSWORD`,
+  `DB_PORT`), defaulting to the local-dev values.
+- **`make reproduce`** regenerates every file in `results/` on the host venv: db -> corpus ->
+  ingest (3 chunkers) -> ingest-bge -> eval-retrieval -> calibrate -> eval (ablation +
+  answers). `make eval` is the run C eval only.
+- **CI (`.github/workflows/ci.yml`)**: three jobs, no secrets. Python: CPU-only torch, ruff
+  check + format check, pytest with `HF_HUB_OFFLINE=1` (a test that tried to download a model
+  would fail) and `RAG_REQUIRE_DOCKER=1` (conftest raises instead of skipping when Docker is
+  missing, so the Testcontainers suite can't silently vanish). The fixture corpus is the
+  four in-code documents in `tests/conftest.py`, not the PDFs. Web: Node 20, `npm ci`,
+  build, vitest. Terraform: fmt -check, init -backend=false, validate. Not run on GitHub from
+  here (no remote); every step was run locally with the same commands.
+
+## Full evaluation (run C)
+- **`make eval` = `scripts/eval_ablation.py` + `scripts/eval_answers.py`**; outputs are CSV +
+  md in `results/` (`ablation_retrieval.*`, `ablation_retrieval_per_question.csv`,
+  `answer_quality.*`).
+- **Ablations are retrieval-only** (recall@1/5/10, MRR@10, ms/query): 3 chunkers x 4 modes on
+  MiniLM; bge-small-en-v1.5 on the recursive chunker (ingested as a second collection, same
+  schema; no query instruction prefix, which BGE v1.5 documents as optional); weighted RRF
+  with dense:bm25 = 0.25, 0.5, 2 (plus 1) on both recursive collections. Weighted runs reuse
+  memoised cross-encoder scores per (collection, query, passage), so only the unweighted runs
+  report latency.
+- **Choosing the "best config" is itself fitted on the eval set**, so the md also reports a
+  5-fold cross-validated selection (pick by MRR@10 on 4/5, score on the held-out 1/5).
+- **Results (2026-11-16):** best is **fixed-size chunks (1000 chars, 150 overlap) +
+  hybrid_rerank on MiniLM: R@5 0.794, R@10 0.853, MRR@10 0.672**; CV selection picked the
+  same config in all 5 folds, held-out MRR@10 0.672. Recursive + hybrid_rerank (the deployed
+  default) is 0.716 / 0.853 / 0.606. bge-small lifts dense alone (MRR 0.405 -> 0.500, R@10
+  0.647 -> 0.706) and fixes plain RRF (MRR 0.478 -> 0.582), but after reranking all
+  recursive variants land at MRR 0.606-0.612: the cross-encoder dominates, and the
+  candidate pool is what matters. Down-weighting MiniLM in RRF (0.25:1) helps hybrid without
+  rerank but changes hybrid_rerank by < 1 question. Latency: BM25 ~2 ms, dense ~13-19 ms,
+  hybrid ~17-23 ms, hybrid_rerank 1.0-1.5 s per query on CPU.
+- **Default left at recursive** despite fixed scoring higher: the abstention threshold was
+  calibrated on recursive's reranker scores, and the MRR gap (0.066) is ~3 questions at
+  n = 51. Switching means `RAG_STRATEGY=fixed` plus re-running `make calibrate` and
+  `eval_answers.py`; recorded as the next step rather than done blindly. Likely reason fixed
+  wins: its 150-char overlap means a gold quote is less often split across two chunks.
+- **Faithfulness = fraction of answer sentences whose content tokens are >= 80 % present in a
+  passage the sentence cites** (`rag.metrics.support`). Chosen over NLI because it is
+  deterministic, needs no extra model and runs in microseconds on CPU, and because the only
+  provider that has been run is the extractive mock, whose sentences are copied verbatim, so
+  an entailment model would add cost without discriminating anything. Its blind spot:
+  paraphrase that flips meaning ("rose" vs "fell") passes. A control scores the same
+  sentences against another question's passages to show the check can fail. **Result:
+  139/139 = 1.000 on the mock (control 0.079)**: this validates citation plumbing, not LLM
+  faithfulness. With a real LLM, the next step is an NLI cross-encoder
+  (e.g. `cross-encoder/nli-deberta-v3-small`) on the same sentence/passage pairs.
+- **Citation accuracy**: a citation is correct when its page holds part of a gold quote.
+  37/128 citations = 0.289 (the mock cites up to 3 passages and usually only one holds the
+  quote); 37/51 = 0.725 answers cite at least one gold page.
+- **Abstention, held out by leave-one-out**: each question is judged by a threshold fitted
+  (balanced accuracy) on the other 57. LOO precision 0.857, recall 0.857 (6/7 unanswerable
+  abstained, 1/51 answerable wrongly abstained), against 1.000 / 1.000 in-sample at the
+  deployed -1.31. LOO thresholds ranged -2.29..-0.34, i.e. the threshold is unstable with 7
+  negatives; more unanswerable questions are the fix.

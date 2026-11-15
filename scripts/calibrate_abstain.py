@@ -21,21 +21,9 @@ from rag import db  # noqa: E402
 from rag.config import REPO_ROOT, get_settings  # noqa: E402
 from rag.embed import Embedder  # noqa: E402
 from rag.evalset import load_questions  # noqa: E402
+from rag.metrics import best_threshold  # noqa: E402
 from rag.parse import Document  # noqa: E402
 from rag.retrieval import Retriever  # noqa: E402
-
-
-def best_threshold(pos: list[float], neg: list[float]) -> tuple[float, float]:
-    """Threshold t (answer iff score >= t) maximising balanced accuracy; midpoint between
-    adjacent observed scores. Returns (t, balanced accuracy)."""
-    xs = sorted(set(pos + neg))
-    cands = [xs[0] - 1.0] + [(a + b) / 2 for a, b in zip(xs, xs[1:], strict=False)] + [xs[-1] + 1]
-    best = (cands[0], -1.0)
-    for t in cands:
-        bacc = (sum(p >= t for p in pos) / len(pos) + sum(n < t for n in neg) / len(neg)) / 2
-        if bacc > best[1]:
-            best = (t, bacc)
-    return best
 
 
 def main() -> None:
