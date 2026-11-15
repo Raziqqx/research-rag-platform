@@ -1,0 +1,31 @@
+[project]
+name = "research-rag-platform"
+version = "0.1.0"
+description = "Research knowledge platform: ingest, hybrid retrieval and evaluation over openly licensed economics/finance papers"
+requires-python = ">=3.12"
+dependencies = [
+  "pymupdf>=1.24",
+  "sentence-transformers>=3.0",
+  "psycopg[binary]>=3.2",
+  "pgvector>=0.3",
+  "rank-bm25>=0.2.2",
+  "numpy>=1.26",
+  "requests>=2.32",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "testcontainers[postgres]>=4", "ruff>=0.6"]
+
+[tool.setuptools]
+packages = ["rag"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["integration: needs Docker (Testcontainers Postgres + pgvector)"]

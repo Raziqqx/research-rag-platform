@@ -1,0 +1,490 @@
+[
+  {
+    "doc_id": "wb-10986-45628",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Sovereign Risk Repricing after Hidden-Debt Revelations",
+    "authors": [
+      "Eskimez, Reina",
+      "Lee, Jiwon",
+      "Ruch, Franz Ulrich"
+    ],
+    "published": "2026-09-22",
+    "doc_type": "working_paper",
+    "topic_query": "sovereign debt",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/19171c5d-0fbb-4b22-80f4-d7deae232973/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45628",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/9139058f-edd9-47b0-a47c-aa08c0900fbe (dc.rights.uri)",
+    "pages": 17,
+    "sha256": "ba05fb9be4ff58c256c09ed2add89b89158e13264d5aa19717c54b628b0b7f59"
+  },
+  {
+    "doc_id": "wb-10986-45655",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "The China Syndrome 2.0: A Misdiagnosis?",
+    "authors": [
+      "Barattieri, Alessandro",
+      "Mattoo, Aaditya"
+    ],
+    "published": "2026-09-29",
+    "doc_type": "working_paper",
+    "topic_query": "financial inclusion",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/6d53a339-0c80-43e6-8558-1cb88b94d631/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45655",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/3b6d52df-f2e1-4c62-acb6-0c9f84fed104 (dc.rights.uri)",
+    "pages": 32,
+    "sha256": "575bab15d865950cfe61a31e40a497526a149b45751743c9e9630ced0be25a6d"
+  },
+  {
+    "doc_id": "wb-10986-45713",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "From Announcement to Completion: Tracking Big FDI Projects in LICs",
+    "authors": [
+      "Aykut, Dilek",
+      "Mauro, Paolo",
+      "Singh, Nimarjit",
+      "Volkov, Alexei"
+    ],
+    "published": "2026-10-08",
+    "doc_type": "working_paper",
+    "topic_query": "climate finance",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/d58e20e8-7b20-4f78-941c-07bb9714e610/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45713",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/bfc209ab-dbda-4473-bda0-22d27f0067d6 (dc.rights.uri)",
+    "pages": 27,
+    "sha256": "5f70904e90a83efd0d87af2cbb8ddc08462d91a7ff556c78a398591432837751"
+  },
+  {
+    "doc_id": "wb-10986-44576",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Who Smooths the Shock? Government and Private Saving in International Risk Sharing",
+    "authors": [
+      "Bokhua, Giorgi",
+      "Islamaj, Ergys"
+    ],
+    "published": "2026-03-30",
+    "doc_type": "working_paper",
+    "topic_query": "remittances",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/9e3892ad-1475-4839-8a00-e2f1964d5a6f/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/44576",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/177f5423-f704-495c-a993-1459e778919b (dc.rights.uri)",
+    "pages": 26,
+    "sha256": "806078c71ed3b5bc788e5689ae624eb2bcea68c9adb4439d0c5766d7e48c5bf1"
+  },
+  {
+    "doc_id": "wb-10986-45257",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Stanley Fischer Memorial Lecture: Public Debt and Central Banks — The World Bank Group ABCDE Conference",
+    "authors": [
+      "Malpass, David R."
+    ],
+    "published": "2026-07-20",
+    "doc_type": "working_paper",
+    "topic_query": "exchange rate",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/46f64f0e-92c8-4f5b-b0c7-612abcfa27ec/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45257",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/8b31c77c-eeb3-4160-b2f9-6b1240c255f7 (dc.rights.uri)",
+    "pages": 10,
+    "sha256": "da3f90be2a4527e4d3a231b4cfa76891f0ac1c3724fd5dbdbed2d8330711be75"
+  },
+  {
+    "doc_id": "wb-10986-43506",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Central Bank Independence and Sovereign Borrowing",
+    "authors": [
+      "Athanasopoulos, Angelos",
+      "Fraccaroli, Nicolò",
+      "Kern, Andreas",
+      "Romelli, Davide"
+    ],
+    "published": "2025-07-25",
+    "doc_type": "working_paper",
+    "topic_query": "banking supervision",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/aec81562-66f9-4b62-bd64-31f0002de0f3/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/43506",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/6319a906-2be2-474a-a02d-487b523a8226 (dc.rights.uri)",
+    "pages": 43,
+    "sha256": "cfafdfb267ae01191606a3de8cc653377fa04482a5b653d8e35911df483f35c5"
+  },
+  {
+    "doc_id": "wb-10986-45767",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Partners on a Climb: Financial Sector Development and Tax Collections in Indonesia",
+    "authors": [
+      "Rab, Habib",
+      "Chattha, Muhammad Khudadad",
+      "Polat, Beyza"
+    ],
+    "published": "2026-10-26",
+    "doc_type": "working_paper",
+    "topic_query": "fiscal policy",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/11f23b61-6cc2-4c7e-ae08-a2d19d1ec744/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45767",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/b3c39e3a-6340-4702-8d7f-cfcdc8310823 (dc.rights.uri)",
+    "pages": 27,
+    "sha256": "6e6ea05d4106ff0266397ff80c4f7e71e1d5d09e1effc96630c0a1e386b390e8"
+  },
+  {
+    "doc_id": "wb-10986-45817",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Voices of the Coast: Spatial versus Household Heterogeneity in Adaptation Needs in Bangladesh",
+    "authors": [
+      "Schwantje, Tom",
+      "Jafino, Bramka Arga",
+      "Triyana, Margaret",
+      "Kazi, Swarna"
+    ],
+    "published": "2026-11-06",
+    "doc_type": "working_paper",
+    "topic_query": "productivity growth",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/421499c7-c5b6-422f-9c6b-af62fc52897a/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45817",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/aa32cd46-d435-439a-86f7-24026a23121e (dc.rights.uri)",
+    "pages": 42,
+    "sha256": "3ba17a31b4c56f460118c1b80d41ed0e4e4e5126c41ab8803424e7ff2efb936a"
+  },
+  {
+    "doc_id": "wb-10986-45666",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "An Analysis of Ghana’s Good Export Market Access",
+    "authors": [
+      "Kee, Hiau Looi",
+      "Neagu, Ileana Cristina"
+    ],
+    "published": "2026-09-28",
+    "doc_type": "working_paper",
+    "topic_query": "trade tariffs",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/b0663b29-225a-452f-b9f7-3996a240a357/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/45666",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/01dc78df-fcfa-4f5b-8833-e3cba0a4d248 (dc.rights.uri)",
+    "pages": 31,
+    "sha256": "75180cc11e62e51ac0e83a248b7758ff35ff8257fecc8c9097cea802f99f13e6"
+  },
+  {
+    "doc_id": "wb-10986-44867",
+    "source": "World Bank Open Knowledge Repository",
+    "title": "Does Social Assistance Reach the Most Vulnerable in Settings with Forced Displacement? Evidence from the Central African Republic",
+    "authors": [
+      "Lain, Jonathan",
+      "Hoogeveen, Johannes"
+    ],
+    "published": "2026-05-13",
+    "doc_type": "working_paper",
+    "topic_query": "household consumption poverty",
+    "url": "https://openknowledge.worldbank.org/server/api/core/bitstreams/f28771fd-48a2-4336-88d4-bd8373d90acb/content",
+    "landing_page": "https://openknowledge.worldbank.org/handle/10986/44867",
+    "licence": "CC BY 3.0 IGO",
+    "licence_url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "licence_evidence": "https://openknowledge.worldbank.org/server/api/core/items/1d2f70c9-4601-41f6-9542-15c4bc86408f (dc.rights.uri)",
+    "pages": 30,
+    "sha256": "ac3c4d4d0ae01f61093818b44157e9b517cff1e3f47ceb25042dbc55eda0daa8"
+  },
+  {
+    "doc_id": "arxiv-2410.14504",
+    "source": "arXiv",
+    "title": "Reinforcement Learning in Non-Markov Market-Making",
+    "authors": [
+      "Luca Lalor",
+      "Anatoliy Swishchuk"
+    ],
+    "published": "2024-11-17",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.CP",
+    "url": "https://arxiv.org/pdf/2410.14504v2",
+    "landing_page": "https://arxiv.org/abs/2410.14504v2",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2410.14504 (licence link on abs page)",
+    "categories": [
+      "q-fin.CP",
+      "q-fin.MF"
+    ],
+    "pages": 23,
+    "sha256": "a3071901feceeeb0367764fde6963ea4ede5e9093fd1e26b3509a4e49c63ef57"
+  },
+  {
+    "doc_id": "arxiv-2502.20706",
+    "source": "arXiv",
+    "title": "Natural Asset Beta",
+    "authors": [
+      "Daniel Grainger"
+    ],
+    "published": "2025-02-28",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.EC",
+    "url": "https://arxiv.org/pdf/2502.20706v1",
+    "landing_page": "https://arxiv.org/abs/2502.20706v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2502.20706 (licence link on abs page)",
+    "categories": [
+      "econ.GN",
+      "q-fin.EC"
+    ],
+    "pages": 12,
+    "sha256": "6ad816786c0fa343a066fd399f3b06f01061f2310f15598ca002e7864cdb8e66"
+  },
+  {
+    "doc_id": "arxiv-2502.21306",
+    "source": "arXiv",
+    "title": "Solar prosumage under different pricing regimes: Interactions with the transmission grid",
+    "authors": [
+      "Dana Kirchem",
+      "Mario Kendziorski",
+      "Enno Wiebrow",
+      "Wolf-Peter Schill",
+      "Claudia Kemfert",
+      "Christian von Hirschhausen"
+    ],
+    "published": "2025-02-28",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.EC",
+    "url": "https://arxiv.org/pdf/2502.21306v1",
+    "landing_page": "https://arxiv.org/abs/2502.21306v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2502.21306 (licence link on abs page)",
+    "categories": [
+      "econ.GN",
+      "q-fin.EC"
+    ],
+    "pages": 25,
+    "sha256": "cf087f91a57d04640cd3af4c927514cd82a17f3f176d80ac835eb48c155d4c94"
+  },
+  {
+    "doc_id": "arxiv-2412.15448",
+    "source": "arXiv",
+    "title": "Risk-Adjusted Performance of Random Forest Models in High-Frequency Trading",
+    "authors": [
+      "Akash Deep",
+      "Abootaleb Shirvani",
+      "Chris Monico",
+      "Svetlozar Rachev",
+      "Frank J. Fabozzi"
+    ],
+    "published": "2025-02-28",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.CP",
+    "url": "https://arxiv.org/pdf/2412.15448v2",
+    "landing_page": "https://arxiv.org/abs/2412.15448v2",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2412.15448 (licence link on abs page)",
+    "categories": [
+      "q-fin.CP",
+      "q-fin.RM"
+    ],
+    "pages": 32,
+    "sha256": "26d5ff92e99a61c2ae44546790afd7539a9b8c3aa7bc81f3037fe67d04552c99"
+  },
+  {
+    "doc_id": "arxiv-2502.14897",
+    "source": "arXiv",
+    "title": "Market-Derived Financial Sentiment Analysis: Context-Aware Language Models for Crypto Forecasting",
+    "authors": [
+      "Hamid Moradi-Kamali",
+      "Mohammad-Hossein Rajabi-Ghozlou",
+      "Mahdi Ghazavi",
+      "Ali Soltani",
+      "Amirreza Sattarzadeh",
+      "Reza Entezari-Maleki"
+    ],
+    "published": "2025-03-02",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.ST",
+    "url": "https://arxiv.org/pdf/2502.14897v2",
+    "landing_page": "https://arxiv.org/abs/2502.14897v2",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2502.14897 (licence link on abs page)",
+    "categories": [
+      "cs.CE",
+      "cs.CL",
+      "cs.LG",
+      "q-fin.ST"
+    ],
+    "pages": 13,
+    "sha256": "3ae7636cd24ef6a726e52b46f95e3ac1a8a2dc49fc05d9807a1203577f139018"
+  },
+  {
+    "doc_id": "arxiv-2503.01040",
+    "source": "arXiv",
+    "title": "Pricing time-capped American options using Least Squares Monte Carlo method",
+    "authors": [
+      "Paweł Stȩpniak",
+      "Zbigniew Palmowski"
+    ],
+    "published": "2025-03-02",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.MF",
+    "url": "https://arxiv.org/pdf/2503.01040v1",
+    "landing_page": "https://arxiv.org/abs/2503.01040v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.01040 (licence link on abs page)",
+    "categories": [
+      "q-fin.MF"
+    ],
+    "pages": 16,
+    "sha256": "c2538c2e7544170fe503e2706d072bf329ec0dc19583fd029190c491993f25a7"
+  },
+  {
+    "doc_id": "arxiv-2503.01591",
+    "source": "arXiv",
+    "title": "The Role of Deep Learning in Financial Asset Management: A Systematic Review",
+    "authors": [
+      "Pedro Reis",
+      "Ana Paula Serra",
+      "João Gama"
+    ],
+    "published": "2025-03-03",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.GN",
+    "url": "https://arxiv.org/pdf/2503.01591v1",
+    "landing_page": "https://arxiv.org/abs/2503.01591v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.01591 (licence link on abs page)",
+    "categories": [
+      "q-fin.GN",
+      "cs.CE",
+      "cs.LG"
+    ],
+    "pages": 34,
+    "sha256": "787eb1e683ae85ccefd4d9f883942df9c6714ad9a9ae4ea77f64a1c9a4c79cbd"
+  },
+  {
+    "doc_id": "arxiv-2503.02496",
+    "source": "arXiv",
+    "title": "To Hedge or Not to Hedge: Optimal Strategies for Stochastic Trade Flow Management",
+    "authors": [
+      "Philippe Bergault",
+      "Olivier Guéant",
+      "Hamza Bodor"
+    ],
+    "published": "2025-03-04",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.TR",
+    "url": "https://arxiv.org/pdf/2503.02496v1",
+    "landing_page": "https://arxiv.org/abs/2503.02496v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.02496 (licence link on abs page)",
+    "categories": [
+      "q-fin.TR"
+    ],
+    "pages": 18,
+    "sha256": "207ded07179d381309683fc9df93d4ded9eb6c155ed0102601f3d3ee4e7f9c42"
+  },
+  {
+    "doc_id": "arxiv-2503.02697",
+    "source": "arXiv",
+    "title": "Consumption-portfolio choice with preferences for liquid assets",
+    "authors": [
+      "Guohui Guan",
+      "Jiaqi Hu",
+      "Zongxia Liang"
+    ],
+    "published": "2025-03-04",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.PM",
+    "url": "https://arxiv.org/pdf/2503.02697v1",
+    "landing_page": "https://arxiv.org/abs/2503.02697v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.02697 (licence link on abs page)",
+    "categories": [
+      "q-fin.PM"
+    ],
+    "pages": 35,
+    "sha256": "dacb95abfc7c89dc7dee170315add0c184d9f95d7b5e53b0413accfe3a8116fe"
+  },
+  {
+    "doc_id": "arxiv-2503.02722",
+    "source": "arXiv",
+    "title": "N-player and mean field games among fund managers considering excess logarithmic returns",
+    "authors": [
+      "Guohui Guan",
+      "Jiaqi Hu",
+      "Zongxia Liang"
+    ],
+    "published": "2025-03-04",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.PM",
+    "url": "https://arxiv.org/pdf/2503.02722v1",
+    "landing_page": "https://arxiv.org/abs/2503.02722v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.02722 (licence link on abs page)",
+    "categories": [
+      "q-fin.PM"
+    ],
+    "pages": 32,
+    "sha256": "34e98c74519654f55b3ebfaf58afe3924833b29ddc28cc614d8afad58e56bf67"
+  },
+  {
+    "doc_id": "arxiv-2502.20978",
+    "source": "arXiv",
+    "title": "Using quantile time series and historical simulation to forecast financial risk multiple steps ahead",
+    "authors": [
+      "Richard Gerlach",
+      "Antonio Naimoli",
+      "Giuseppe Storti"
+    ],
+    "published": "2025-03-04",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.ST",
+    "url": "https://arxiv.org/pdf/2502.20978v2",
+    "landing_page": "https://arxiv.org/abs/2502.20978v2",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2502.20978 (licence link on abs page)",
+    "categories": [
+      "q-fin.ST",
+      "q-fin.CP",
+      "q-fin.RM"
+    ],
+    "pages": 37,
+    "sha256": "5f09cc61d1979f0e3e02966635ca2d91d0562018e562d7e95c7d1feb94d1e085"
+  },
+  {
+    "doc_id": "arxiv-2503.03858",
+    "source": "arXiv",
+    "title": "Looking into informal currency markets as Limit Order Books: impact of market makers",
+    "authors": [
+      "Alejandro García Figal",
+      "Alejandro Lage Castellanos",
+      "Roberto Mulet"
+    ],
+    "published": "2025-03-05",
+    "doc_type": "preprint",
+    "topic_query": "q-fin.TR",
+    "url": "https://arxiv.org/pdf/2503.03858v1",
+    "landing_page": "https://arxiv.org/abs/2503.03858v1",
+    "licence": "CC BY 4.0",
+    "licence_url": "https://creativecommons.org/licenses/by/4.0/",
+    "licence_evidence": "https://arxiv.org/abs/2503.03858 (licence link on abs page)",
+    "categories": [
+      "q-fin.TR"
+    ],
+    "pages": 20,
+    "sha256": "2d083638b17445ffa808f8af0d112d4213641505516d7dbb5d044ee9f0c09290"
+  }
+]
