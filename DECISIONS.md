@@ -123,3 +123,25 @@ Decisions taken without asking, with the reasoning. Newest at the bottom of each
   API, so clients get structured content plus an output schema. The Platform is built on first
   tool call, so `list_tools` doesn't load models. Transports: stdio (default) and
   Streamable HTTP (`--http PORT`). Tests use the SDK's in-process `Client(server)`.
+
+## Frontend and compose (run B)
+- **Web: React 18 + TypeScript on Vite 5** (Node 18 on this machine), no UI library. Calls
+  relative `/api/*`; the Vite dev proxy and the nginx config in the web image both strip the
+  prefix and forward to the API, so the same build works in dev and in compose.
+  One vitest + Testing Library component test covers citation parsing and the click-to-show
+  passage behaviour.
+- **Compose: db + api + web.** The API image installs CPU-only torch (image 2.49 GB, measured)
+  and does not bake models in: `${RAG_DATA_DIR:-~/rag-data}/hf-cache` is mounted with
+  `HF_HUB_OFFLINE=1`. The db service reuses the existing `pgdata` volume, so the already
+  ingested corpus is served. `ANTHROPIC_API_KEY` is passed through; empty means mock.
+- **End-to-end check (2026-11-16, `docker compose up -d --build --wait`, all three healthy):**
+  `GET :8000/health` → 200 `{"status":"ok","chunks":1544,"strategy":"recursive",
+  "provider":"mock-extractive"}`. `POST :8080/api/ask` (through nginx) "How did Ecuador's
+  hidden debt come to light in 2018?" → 200 in 1.18 s, not abstained, top score 6.25, first
+  sentence is the gold quote cited `[wb-10986-45628:6]` (the gold page), 0 invalid citations.
+  "Who won the 1998 football World Cup?" → 200 in 2.0 s, abstained, top score -8.84.
+  Then `docker compose stop api web`.
+- **Known limitations seen in that run:** the mock can extract a section heading as a
+  "sentence" (e.g. "Identification of hidden debt revelations"); and a `/health` request that
+  arrived during an `/ask` waited ~1.1 s for the shared-connection lock (logged). Run C: give
+  health its own connection or a pool, and filter heading-like fragments in the mock.

@@ -1,3 +1,5 @@
+# db + api + web. Run C extends this (MCP over HTTP, eval job). Usage:
+#   docker compose up -d --build --wait     then  http://localhost:8080 (web), :8000/docs (API)
 services:
   db:
     image: pgvector/pgvector:pg16
@@ -11,5 +13,27 @@ services:
       test: ["CMD-SHELL", "pg_isready -U rag -d rag"]
       interval: 5s
       retries: 20
+
+  api:
+    build: { context: ., dockerfile: docker/api.Dockerfile }
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgresql://rag:rag@db:5432/rag
+      RAG_STRATEGY: ${RAG_STRATEGY:-recursive}
+      RAG_ABSTAIN_THRESHOLD: ${RAG_ABSTAIN_THRESHOLD:--1.31}
+      HF_HUB_OFFLINE: "1"
+      # Empty -> extractive mock provider; set it in your shell to use Claude.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+    volumes:
+      - ${RAG_DATA_DIR:-~/rag-data}/hf-cache:/hf-cache
+    ports: ["8000:8000"]
+
+  web:
+    build: ./web
+    depends_on:
+      api: { condition: service_healthy }
+    ports: ["8080:80"]
+
 volumes:
   pgdata:
