@@ -16,6 +16,7 @@ Anything that can't be confirmed is dropped. PDFs themselves are never committed
 from __future__ import annotations
 
 import argparse
+import functools
 import hashlib
 import json
 import re
@@ -80,6 +81,11 @@ def page_count(path: Path) -> int:
 
 
 # --------------------------------------------------------------------------- World Bank
+def _dc_values(metadata: dict, key: str) -> list[str]:
+    """All values of one Dublin Core field in a DSpace item record."""
+    return [v["value"] for v in metadata.get(key, [])]
+
+
 def wb_candidates(query: str, size: int = 25) -> list[dict]:
     resp = requests.get(
         f"{WB_API}/discover/search/objects",
@@ -112,8 +118,7 @@ def discover_world_bank(want: int, pdf_dir: Path) -> list[dict]:
         for item in wb_candidates(query):
             if len(out) >= want:
                 return out
-            m = item["metadata"]
-            meta = lambda k: [v["value"] for v in m.get(k, [])]  # noqa: E731
+            meta = functools.partial(_dc_values, item["metadata"])
             if item["uuid"] in seen or "Working Paper" not in meta("dc.type"):
                 continue
             seen.add(item["uuid"])
@@ -159,6 +164,10 @@ def discover_world_bank(want: int, pdf_dir: Path) -> list[dict]:
 NS = {"oai": "http://www.openarchives.org/OAI/2.0/", "a": "http://arxiv.org/OAI/arXiv/"}
 
 
+def _ax_text(md: ET.Element, tag: str) -> str:
+    return (md.findtext(f"a:{tag}", default="", namespaces=NS) or "").strip()
+
+
 def arxiv_records(date_from: str, date_until: str) -> list[dict]:
     resp = requests.get(
         ARXIV_OAI,
@@ -179,7 +188,7 @@ def arxiv_records(date_from: str, date_until: str) -> list[dict]:
         md = rec.find(".//a:arXiv", NS)
         if md is None:
             continue
-        get = lambda tag: (md.findtext(f"a:{tag}", default="", namespaces=NS) or "").strip()  # noqa: E731
+        get = functools.partial(_ax_text, md)
         authors = [
             " ".join(
                 filter(None, [a.findtext("a:forenames", "", NS), a.findtext("a:keyname", "", NS)])
