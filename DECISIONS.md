@@ -153,3 +153,27 @@ Decisions taken without asking, with the reasoning. Newest at the bottom of each
   "sentence" (e.g. "Identification of hidden debt revelations"); and a `/health` request that
   arrived during an `/ask` waited ~1.1 s for the shared-connection lock (logged). Run C: give
   health its own connection or a pool, and filter heading-like fragments in the mock.
+
+## Terraform (run C)
+- **Oracle Cloud (OCI) Always Free: one Ampere A1 VM (2 OCPU / 12 GB, 100 GB boot volume)
+  running the compose stack**, in `infra/terraform/`. Compared options: GCP's free e2-micro has
+  1 GB RAM, too small for torch plus two models; AWS's free tier for new accounts is now
+  time-limited credits, and RDS/Cloud SQL are not free beyond that. OCI A1 (up to 4 OCPU /
+  24 GB) is free with no expiry and arm64 wheels exist for CPU torch, and the pgvector image is
+  multi-arch.
+- **Postgres is a container on the VM, not a managed service**: OCI's free managed database is
+  Oracle Autonomous DB, which has no pgvector. Trade-off: backups and failover are on us
+  (next step: a nightly `pg_dump` to Always Free Object Storage).
+- Network: VCN + public subnet; the security list opens 22 to `admin_cidr` only (validated,
+  0.0.0.0/0 rejected) and 80 to the world. Postgres and the API port are never exposed; nginx
+  serves the UI and proxies `/api`. Secrets (`postgres_password`, `anthropic_api_key`) are
+  `sensitive` variables written to a 0600 `.env` by cloud-init; `terraform.tfvars` is
+  git-ignored and only `terraform.tfvars.example` is committed. State is local (no backend);
+  a shared deployment would use an OCI Object Storage backend.
+- Cloud-init installs Docker, clones the repo, runs the `ingest` compose job (fetch +
+  sha256-check the PDFs, embed), then `docker compose up -d --wait`.
+- **Checked with `make tf-check`** (`terraform fmt -check`, `init -backend=false`,
+  `validate` in the `hashicorp/terraform:1.9.8` image): passes. **Never applied**: no OCI
+  account or credentials were used, so the boot script is untested on a real VM.
+- WSL note: `docker pull` failed through the Docker Desktop credential helper; pulling with
+  an empty `DOCKER_CONFIG` works for public images.

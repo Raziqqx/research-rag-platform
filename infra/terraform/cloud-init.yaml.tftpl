@@ -1,0 +1,23 @@
+#cloud-config
+# Rendered by Terraform (templatefile). Progress: /var/log/cloud-init-output.log
+package_update: true
+packages: [git, ca-certificates, curl]
+write_files:
+  - path: /opt/rag/.env
+    permissions: "0600"
+    content: |
+      POSTGRES_PASSWORD=${postgres_password}
+      ANTHROPIC_API_KEY=${anthropic_api_key}
+      RAG_DATA_DIR=/opt/rag-data
+      WEB_PORT=80
+      DB_PORT=127.0.0.1:5433
+runcmd:
+  - curl -fsSL https://get.docker.com | sh
+  - mkdir -p /opt/rag-data/pdfs /opt/rag-data/hf-cache
+  - git clone --branch ${repo_ref} ${repo_url} /opt/rag/app
+  - cp /opt/rag/.env /opt/rag/app/.env
+  - cd /opt/rag/app && docker compose --profile ingest build
+  - cd /opt/rag/app && docker compose --profile ingest run --rm ingest
+  - cd /opt/rag/app && docker compose up -d --wait
+  # Ubuntu images on OCI ship iptables rules that drop inbound traffic except SSH.
+  - iptables -I INPUT 6 -p tcp --dport 80 -j ACCEPT && netfilter-persistent save
