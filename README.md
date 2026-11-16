@@ -6,8 +6,6 @@ search (BM25 + dense vectors + a cross-encoder reranker), and answers questions 
 citations that are checked before they reach the user. The same service is exposed three ways:
 a FastAPI backend, a React + TypeScript UI, and an MCP server that any MCP client can call.
 
-**Start here: [docs/GUIDE.md](docs/GUIDE.md)** (how the whole project works, file by file).
-
 The core of the project is the **evaluation**: a 58-question gold set with verbatim quotes, and
 a measured ablation of chunking strategies, embedding models and search modes.
 
@@ -160,19 +158,8 @@ Answers, end to end (`results/answer_quality.md`, mock provider):
   Terraform checks. **It has not run on GitHub** (no remote yet). The same commands were run
   locally.
 
-## Target roles
-
-- **DBS, Accenture**: production RAG with evaluation, FastAPI, Postgres/pgvector, Docker,
-  Terraform, CI.
-- **MAS**: an economics/finance research database with licence-checked sources, citations and
-  abstention.
-- **HTX xCyber** (secondary): grounded answers, citation validation and refusal gating as
-  safeguards for an LLM system.
-
 ## Docs
 
-- `docs/GUIDE.md`: study guide (start here): stack, code map, request trace, every feature
 - `docs/FEATURES.md`: tech stack, workflow and a short explainer for each feature
 - `docs/DESIGN.md`: decisions, trade-offs, baseline vs improved, limitations
-- `docs/INTERVIEW_NOTES.md`: likely questions and the hardest parts explained
 - `DECISIONS.md`: the full decision log
