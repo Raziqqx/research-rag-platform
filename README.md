@@ -6,6 +6,8 @@ search (BM25 + dense vectors + a cross-encoder reranker), and answers questions 
 citations that are checked before they reach the user. The same service is exposed three ways:
 a FastAPI backend, a React + TypeScript UI, and an MCP server that any MCP client can call.
 
+**Start here: [docs/GUIDE.md](docs/GUIDE.md)** (how the whole project works, file by file).
+
 The core of the project is the **evaluation**: a 58-question gold set with verbatim quotes, and
 a measured ablation of chunking strategies, embedding models and search modes.
 
@@ -27,7 +29,10 @@ a measured ablation of chunking strategies, embedding models and search modes.
 
 ## Demo
 
-No GIF is committed. To record one:
+![Web UI answering a question with a clicked citation](docs/screenshot-ask.png)
+
+*The web UI at `http://localhost:8080` (headless Chromium capture). The answer comes from the
+extractive mock; each `[doc_id:page]` is a button, and clicking one shows the cited passage.*
 
 ```bash
 make db corpus ingest          # Postgres, download the 22 PDFs (sha256-checked), ingest
@@ -41,6 +46,23 @@ API docs are at `http://localhost:8000/docs`. Routes: `GET /health`, `GET /searc
 `POST /ask`, `GET /documents/{doc_id}`.
 MCP tools: `search`, `get_document`, `summarise`, `compare_reports` (`make mcp` for stdio, or
 `python -m rag.mcp_server --http PORT` for Streamable HTTP).
+
+## See it working
+
+Assumes the collections are already ingested (`make db corpus ingest`, once).
+
+1. **Start the stack:** `make up`. You should see `api-1 Healthy` and `web-1 Healthy` in the
+   output (the first build takes a few minutes).
+2. **Open the web UI:** go to `http://localhost:8080`, type
+   `How did Ecuador's hidden debt come to light in 2018?` and press Search. You should see an
+   answer citing `[wb-10986-45628:6]`, and below it the 10 ranked passages. Click the citation:
+   the passage from page 6 appears (as in the screenshot above).
+3. **Check abstention:** ask `Who won the 1998 football World Cup?`. You should see
+   `Not found in corpus.` and a top rerank score far below the -1.31 threshold (about -8.8).
+4. **Open the API docs:** go to `http://localhost:8000/docs`. You should see the Swagger page
+   with `/health`, `/search`, `/ask` and `/documents/{doc_id}`; `curl localhost:8000/health`
+   prints `{"status":"ok",...,"provider":"mock-extractive"}`.
+5. **Stop it:** `make down`.
 
 ## Quick start
 
@@ -149,6 +171,7 @@ Answers, end to end (`results/answer_quality.md`, mock provider):
 
 ## Docs
 
+- `docs/GUIDE.md`: study guide (start here): stack, code map, request trace, every feature
 - `docs/FEATURES.md`: tech stack, workflow and a short explainer for each feature
 - `docs/DESIGN.md`: decisions, trade-offs, baseline vs improved, limitations
 - `docs/INTERVIEW_NOTES.md`: likely questions and the hardest parts explained
